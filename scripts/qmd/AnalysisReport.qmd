@@ -137,7 +137,7 @@ null.chi <- anova(glm.1, glm.2, test = "Chisq")
 
 ```
 
-##Prediction
+## Prediction
 ```{r} 
 #| label: fig-prediction-plot
 #| echo: false
@@ -147,9 +147,22 @@ pred <- ggpredict(glm.2, terms = c("InsectAbundance", "EnvironmentalNoise"))
 plot(pred)
 ```
 
+### Check prediction
+```{r}
+#| label: fig-checking-prediction
+#| echo: false
+birds$pred <- predict(glm.2, type = "response")
+
+ggplot(birds, aes(pred, Number.of.Fledglings)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_bw()
+```
+The prediction in @fig-checking-prediction seems to fit the actually observed values well. 
+
 ```{r}
 #| label: fig-predictions
-
+#| echo: false
   pred_insect <- ggpredict(glm.2, terms = "InsectAbundance")
   pred_env <- ggpredict(glm.2, terms = "EnvironmentalNoise")
 ggarrange(
@@ -157,9 +170,14 @@ ggarrange(
   plot(pred_env)
 )
 ```
+When looking at the two seperate values in @fig-predictions, there seems to be a stronger influence of Insect Abundance on the number of offspring than the environmental noise. Both show a positive correlation though.
 
-
-
+```{r}
+#| label: tbl-anova
+#| echo: false
+print(anova(glm.2))
+```
+Also the anova of the model shows that Insect abundance has a significant influence on number of Fledglings, while the effect of the level of environmental noise is not significant!
 ## Report Findings
 
 ## Store session information
