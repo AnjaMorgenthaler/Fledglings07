@@ -18,4 +18,16 @@ execute:
   warning: false
   message: false
 ---
-    
+
+# Urban Fledglings Analysis Report
+## Session Preparation
+## Data Exploration
+### Numerically
+### Graphically
+## Model
+### Fit Candidate Models
+### Select Preffered Model
+### validate Preferred Model
+## Interpretation
+## Report Findings
+## Store session information
