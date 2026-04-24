@@ -23,6 +23,8 @@ execute:
 
 ## Session Preparation
 
+The preparation includes loading of the required libraries, importing the cleaned data and adding a additional column to number the nests. Then, nests with NA values are excluded for further analysis.
+
 ```{r}
 #| label: Loading libraries
 #| echo: false
@@ -33,7 +35,8 @@ library(pastecs)
   library(performance)
   library(MuMIn)
   library(ggeffects)
-  library(knitr) 
+  library(knitr)
+  library(dplyr)
 ```
 
 ```{r}
@@ -41,21 +44,75 @@ library(pastecs)
 #| echo: false
 
 birds <- read.csv("/Users/anjam/Desktop/Fledglings07/data/processed/clean.csv")
+summary(birds)
+
+birds$nests <- 1:nrow(birds)
+```
+
+```{r}
+#| label: excluding NA data
+#| echo: false
+
+#use summary to look at data and see how many NA datapoints there are:
+summary(birds)
+
+birds <- na.omit(birds) #clean command to delete all rows that contain NA values
+birds <- birds %>%
+  select(-starts_with("error"), -("nests"))
 ```
 
 ## Data Exploration
 
+```{}
+```
+
 ### Numerically
+
+```{r}
+#| label: tbl-explore-data
+#| tbl-cap: "Descritive statistics for the variables."
+#| echo: false
+
+sum_stats <- stat.desc(birds)
+kable(sum_stats, digits=1)
+```
 
 ### Graphically
 
-## Model
+```{r}
+#| label: fig-scatterplot-matrix
+#| fig-cap: "Relationship between Insect Abundance and Environmental noise on number of offspring"
+#| echo: false
 
-### Fit Candidate Models
 
-### Select Preffered Model
+ggplot(birds, aes(InsectAbundance, EnvironmentalNoise)) +
+           geom_point(aes(size = Number.of.Fledglings))
+
+```
+
+@fig-scatterplot-matrix displays the size of offspring in relation to the environmental noise and the food abundance. There's already a trend visible, indicating a higher number of Fledglings in environments with low noise levels and high insect abundance.
+
+## Fit Models
+
+```{r}
+#| label: tbl-fit-models
+#| tbl-cap: "Model comparison"
+
+#fit poisson models
+glm.1 <- glm(Number.of.Fledglings ~1, family = "poisson", birds)
+glm.2 <- glm(Number.of.Fledglings ~ InsectAbundance + EnvironmentalNoise, family = "poisson", birds)
+glm.3 <- glm(Number.of.Fledglings ~ InsectAbundance * EnvironmentalNoise, family = "poisson", birds)
+
+#Compare models
+kable(compare_performance(glm.1, glm.2, glm.3))
+compare_performance(glm.1, glm.2, glm.3)
+```
+Based on the compared performance, model glm.2 is chosen, as it shows the best fit with lowest AIC/AICc and BIC (@tbl-fit-models).
 
 ### Validate Preferred Model
+```{r}
+
+```
 
 ## Interpretation
 
