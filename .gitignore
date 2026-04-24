@@ -1,3 +1,7 @@
 *.csv
 .Rproj.user
 .positai
+../../.quarto/
+../../Fledglings07.Rproj
+../../Fledglings07.qmd
+../../data/
