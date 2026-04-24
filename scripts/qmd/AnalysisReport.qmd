@@ -111,10 +111,31 @@ Based on the compared performance, model glm.2 is chosen, as it shows the best f
 
 ### Validate Preferred Model
 ```{r}
+#| label: fig-diagnostics-overdispersion
+
+
+check_overdispersion(glm.2)
+deviance(glm.2) / df.residual(glm.2) #bad if deviance > 1
+#check_model(glm.2)
 
 ```
+As there's no overdispersion detected, analysis will be continued with model 2.
 
 ## Interpretation
+
+```{r}
+#| label: interpret-objects
+#| echo: false
+
+#Objects we need to construct table:
+#coefficients, SE, z and p
+coef.table <- round(summary(glm.2)$coefficients, 3)
+#approximate R2
+r.2 <- round(attributes(r.squaredLR(glm.2))$adj.r.squared, 3)
+#compare performance to null-model
+null.chi <- anova(glm.1, glm.2, test = "Chisq") 
+
+```
 
 ## Report Findings
 
