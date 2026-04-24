@@ -137,6 +137,29 @@ null.chi <- anova(glm.1, glm.2, test = "Chisq")
 
 ```
 
+##Prediction
+```{r} 
+#| label: fig-prediction-plot
+#| echo: false
+
+
+pred <- ggpredict(glm.2, terms = c("InsectAbundance", "EnvironmentalNoise"))
+plot(pred)
+```
+
+```{r}
+#| label: fig-predictions
+
+  pred_insect <- ggpredict(glm.2, terms = "InsectAbundance")
+  pred_env <- ggpredict(glm.2, terms = "EnvironmentalNoise")
+ggarrange(
+  plot(pred_insect),
+  plot(pred_env)
+)
+```
+
+
+
 ## Report Findings
 
 ## Store session information
