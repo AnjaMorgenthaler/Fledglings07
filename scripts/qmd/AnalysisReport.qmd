@@ -47,18 +47,21 @@ birds <- read.csv("/Users/anjam/Desktop/Fledglings07/data/processed/clean.csv")
 summary(birds)
 
 birds$nests <- 1:nrow(birds)
+
+
 ```
 
 ```{r}
 #| label: excluding NA data
 #| echo: false
 
-#use summary to look at data and see how many NA datapoints there are:
-summary(birds)
-
 birds <- na.omit(birds) #clean command to delete all rows that contain NA values
 birds <- birds %>%
   select(-starts_with("error"), -("nests"))
+#use summary to look at data and see how many NA datapoints there are:
+summary(birds)
+
+
 ```
 
 ## Data Exploration
@@ -95,14 +98,19 @@ ggplot(birds, aes(InsectAbundance, EnvironmentalNoise)) +
 
 To analyse the data, a matching model has to be fitted. A poisson GLM is being chosen.
 ```{r}
-#| label: tbl-fit-models
-#| tbl-cap: "Model comparison"
-
+#| label: Models
+#| Output: false
 #fit poisson models
 glm.1 <- glm(Number.of.Fledglings ~1, family = "poisson", birds)
 glm.2 <- glm(Number.of.Fledglings ~ InsectAbundance + EnvironmentalNoise, family = "poisson", birds)
 glm.3 <- glm(Number.of.Fledglings ~ InsectAbundance * EnvironmentalNoise, family = "poisson", birds)
 
+```
+
+```{r}
+#| label: tbl-fit-models
+#| tbl-cap: "Model comparison"
+#| echo: false
 #Compare models
 kable(compare_performance(glm.1, glm.2, glm.3))
 compare_performance(glm.1, glm.2, glm.3)
@@ -122,7 +130,7 @@ deviance(glm.2) / df.residual(glm.2) #bad if deviance > 1
 
 ```
 
-As there's no overdispersion detected, analysis will be continued with model 2.
+As there's no overdispersion detected and the deviance is low, analysis will be continued with model 2.
 
 ## Interpretation
 
@@ -182,7 +190,7 @@ When looking at the two seperate values in @fig-predictions, there seems to be a
 ```{r}
 #| label: tbl-anova
 #| echo: false
-print(anova(glm.2))
+kable(anova(glm.2))
 ```
 
 Also the anova of the model shows that Insect abundance has a significant influence on number of Fledglings, while the effect of the level of environmental noise is not significant!
