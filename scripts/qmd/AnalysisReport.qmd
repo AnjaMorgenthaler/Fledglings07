@@ -63,8 +63,7 @@ birds <- birds %>%
 
 ## Data Exploration
 
-```{}
-```
+First the data is being explored both numerically and graphically.
 
 ### Numerically
 
@@ -94,6 +93,7 @@ ggplot(birds, aes(InsectAbundance, EnvironmentalNoise)) +
 
 ## Fit Models
 
+To analyse the data, a matching model has to be fitted. A poisson GLM is being chosen.
 ```{r}
 #| label: tbl-fit-models
 #| tbl-cap: "Model comparison"
@@ -107,18 +107,21 @@ glm.3 <- glm(Number.of.Fledglings ~ InsectAbundance * EnvironmentalNoise, family
 kable(compare_performance(glm.1, glm.2, glm.3))
 compare_performance(glm.1, glm.2, glm.3)
 ```
+
 Based on the compared performance, model glm.2 is chosen, as it shows the best fit with lowest AIC/AICc and BIC (@tbl-fit-models).
 
 ### Validate Preferred Model
+The preferred model is then validated by checking the overdispersion and deviance. 
 ```{r}
 #| label: fig-diagnostics-overdispersion
-
+#| echo: false
 
 check_overdispersion(glm.2)
 deviance(glm.2) / df.residual(glm.2) #bad if deviance > 1
 #check_model(glm.2)
 
 ```
+
 As there's no overdispersion detected, analysis will be continued with model 2.
 
 ## Interpretation
@@ -137,8 +140,9 @@ null.chi <- anova(glm.1, glm.2, test = "Chisq")
 
 ```
 
-## Prediction
-```{r} 
+### Prediction
+
+```{r}
 #| label: fig-prediction-plot
 #| echo: false
 
@@ -147,7 +151,8 @@ pred <- ggpredict(glm.2, terms = c("InsectAbundance", "EnvironmentalNoise"))
 plot(pred)
 ```
 
-### Check prediction
+#### Check prediction
+
 ```{r}
 #| label: fig-checking-prediction
 #| echo: false
@@ -158,7 +163,8 @@ ggplot(birds, aes(pred, Number.of.Fledglings)) +
   geom_smooth(method = "lm", se = FALSE) +
   theme_bw()
 ```
-The prediction in @fig-checking-prediction seems to fit the actually observed values well. 
+
+The prediction in @fig-checking-prediction seems to fit the actually observed values well.
 
 ```{r}
 #| label: fig-predictions
@@ -170,6 +176,7 @@ ggarrange(
   plot(pred_env)
 )
 ```
+
 When looking at the two seperate values in @fig-predictions, there seems to be a stronger influence of Insect Abundance on the number of offspring than the environmental noise. Both show a positive correlation though.
 
 ```{r}
@@ -177,7 +184,14 @@ When looking at the two seperate values in @fig-predictions, there seems to be a
 #| echo: false
 print(anova(glm.2))
 ```
-Also the anova of the model shows that Insect abundance has a significant influence on number of Fledglings, while the effect of the level of environmental noise is not significant!
-## Report Findings
 
-## Store session information
+Also the anova of the model shows that Insect abundance has a significant influence on number of Fledglings, while the effect of the level of environmental noise is not significant!
+
+##Store session information
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+
+sessionInfo()
