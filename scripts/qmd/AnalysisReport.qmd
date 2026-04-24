@@ -1,15 +1,14 @@
 ---
 title: "Urban Fledglings"
-Author: "Anja Morgenthaler"
-Date: Today
+author: "Anja Morgenthaler"
+date: today
 toc: true
-abstract-title: "Research question"
+abstract_title: "Research question"
 abstract: "How do environmental stressors and resource availability influence reproductive success?"
 format:
-  html:
+  pdf:
     embed-resources: true
     number-sections: true
-    code-fold: show
     
 editor: visual
 editor_options:
@@ -44,23 +43,20 @@ library(pastecs)
 #| echo: false
 
 birds <- read.csv("/Users/anjam/Desktop/Fledglings07/data/processed/clean.csv")
-summary(birds)
-
-birds$nests <- 1:nrow(birds)
-
 
 ```
 
 ```{r}
 #| label: excluding NA data
+#| 
 #| echo: false
 
-birds <- na.omit(birds) #clean command to delete all rows that contain NA values
+
 birds <- birds %>%
-  select(-starts_with("error"), -("nests"))
+  select(-starts_with("error"))
 #use summary to look at data and see how many NA datapoints there are:
 summary(birds)
-
+birds <- na.omit(birds) #clean command to delete all rows that contain NA values
 
 ```
 
@@ -94,9 +90,11 @@ ggplot(birds, aes(InsectAbundance, EnvironmentalNoise)) +
 
 @fig-scatterplot-matrix displays the size of offspring in relation to the environmental noise and the food abundance. There's already a trend visible, indicating a higher number of Fledglings in environments with low noise levels and high insect abundance.
 
+
 ## Fit Models
 
 To analyse the data, a matching model has to be fitted. A poisson GLM is being chosen.
+
 ```{r}
 #| label: Models
 #| Output: false
@@ -113,13 +111,15 @@ glm.3 <- glm(Number.of.Fledglings ~ InsectAbundance * EnvironmentalNoise, family
 #| echo: false
 #Compare models
 kable(compare_performance(glm.1, glm.2, glm.3))
-compare_performance(glm.1, glm.2, glm.3)
+#compare_performance(glm.1, glm.2, glm.3)
 ```
 
 Based on the compared performance, model glm.2 is chosen, as it shows the best fit with lowest AIC/AICc and BIC (@tbl-fit-models).
 
 ### Validate Preferred Model
-The preferred model is then validated by checking the overdispersion and deviance. 
+
+The preferred model is then validated by checking the overdispersion and deviance.
+
 ```{r}
 #| label: fig-diagnostics-overdispersion
 #| echo: false
@@ -187,19 +187,20 @@ ggarrange(
 
 When looking at the two seperate values in @fig-predictions, there seems to be a stronger influence of Insect Abundance on the number of offspring than the environmental noise. Both show a positive correlation though.
 
+
 ```{r}
 #| label: tbl-anova
 #| echo: false
 kable(anova(glm.2))
 ```
 
-Also the anova of the model shows that Insect abundance has a significant influence on number of Fledglings, while the effect of the level of environmental noise is not significant!
 
-##Store session information
+Also the anova (@tbl-anova) of the model shows that Insect abundance has a significant influence on number of Fledglings, while the effect of the level of environmental noise is not significant!
+
 
 ```{r}
 #| echo: false
+#| output: false
 sessionInfo()
 ```
 
-sessionInfo()
