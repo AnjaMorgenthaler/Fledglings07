@@ -19,15 +19,46 @@ execute:
   message: false
 ---
 
-# Urban Fledglings Analysis Report
+# Urban Fledglings - Analysis Report
+
 ## Session Preparation
+
+```{r}
+#| label: Loading libraries
+#| echo: false
+#load libraries
+library(pastecs)
+  library(ggpubr); theme_set(theme_bw())
+  library(GGally)
+  library(performance)
+  library(MuMIn)
+  library(ggeffects)
+  library(knitr) 
+```
+
+```{r}
+#| label: Importing data
+#| echo: false
+
+birds <- read.csv("/Users/anjam/Desktop/Fledglings07/data/processed/clean.csv")
+```
+
 ## Data Exploration
+
 ### Numerically
+
 ### Graphically
+
 ## Model
+
 ### Fit Candidate Models
+
 ### Select Preffered Model
-### validate Preferred Model
+
+### Validate Preferred Model
+
 ## Interpretation
+
 ## Report Findings
+
 ## Store session information
