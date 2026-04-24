@@ -1,0 +1,21 @@
+---
+title: "Urban Fledglings"
+Author: "Anja Morgenthaler"
+Date: Today
+toc: true
+abstract-title: "Research question"
+abstract: "How do environmental stressors and resource availability influence reproductive success?"
+format:
+  html:
+    embed-resources: true
+    number-sections: true
+    code-fold: show
+    
+editor: visual
+editor_options:
+  chunk_output_type: console
+execute:
+  warning: false
+  message: false
+---
+    
